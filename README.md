@@ -18,6 +18,25 @@ Compare Apple and Tesla stock performance over 5 years to determine which offere
 - **Risk:** Tesla showed higher daily volatility (shakier price line)
 - **Liquidity:** Tesla had significantly higher average trading volume
 
+## 🔍 Key SQL Queries
+
+**ROI Calculation**
+```sql
+SELECT 
+  ticker,
+  ROUND((MAX(close_price) - MIN(close_price)) / MIN(close_price) * 100, 2) AS roi_percent
+FROM stock_prices
+GROUP BY ticker;
+```
+
+**Month-over-Month Growth using LAG()**
+```sql
+SELECT ticker, month, monthly_avg,
+  ROUND((monthly_avg - LAG(monthly_avg) OVER (PARTITION BY ticker ORDER BY month)) 
+    / LAG(monthly_avg) OVER (PARTITION BY ticker ORDER BY month) * 100, 2) AS mom_growth
+FROM monthly_summary;
+```
+
 ## 🛠️ How to Run
 1. Install MySQL and enable `local_infile`
 2. Update the CSV path in the SQL file to your local path
